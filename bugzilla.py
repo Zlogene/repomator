@@ -1,7 +1,7 @@
 """The module handles all bugzilla needs"""
 
 import json
-from pprint import pprint
+#from pprint import pprint
 import os
 import yaml
 import requests
@@ -45,10 +45,10 @@ def bugtracker(arch, bug, email):
     config = yml_parser()
 
     comment_url = '{}/rest/bug/{}/comment'.format(config["url"], bug)
-    cc_url = '{}/rest/bug/{}'.format(config["url"], bug)
+ #   cc_url = '{}/rest/bug/{}'.format(config["url"], bug)
 
     comment_data = json.dumps({"comment": "{} {}".format(arch, config["comment"])})
-    cc_change = json.dumps({"cc": {"remove": [{}].format(email)}})
+#  cc_change = json.dumps({"cc": {"remove": [{}].format(email)}})
 
     auth = requests.get('{}/rest/login?login={}&password={}'.format(config["url"], config["login"], config["password"]))
 
@@ -56,6 +56,6 @@ def bugtracker(arch, bug, email):
 
     requests.post(comment_url + "?token={}".format(token), data=comment_data)
 
-    abra = requests.put(cc_url + "?token={}".format(token), data=cc_change)
+#    abra = requests.put(cc_url + "?token={}".format(token), data=cc_change)
 
-    pprint(abra.text)
+#    pprint(abra.text)
