@@ -27,7 +27,6 @@ check_existence("/usr/bin/ekeyword")
 parser = argparse.ArgumentParser(description='Repomator script v1.0')
 parser.add_argument('-a', '--arch', help='specify architecture')
 parser.add_argument('-b', '--bug', type=int, help='specify bug number')
-parser.add_argument('-e', '--email', help='specify e-mail to change CC')
 parser.add_argument('-l', '--list', help='specify packages list')
 parser.add_argument('-r', '--repo', help='specify repo path')
 
@@ -52,4 +51,4 @@ with open(data, 'r') as f:
         os.system("/usr/bin/ekeyword {} {}-{}.ebuild".format(arch, package_name, package_version))
         os.system("/usr/bin/repoman ci -m \"{}/{}: {} stable wrt bug {}\"".format(package_category, package_name, arch, bug))
 
-bugtracker(arch, bug, email)
+bugtracker(arch, bug)
