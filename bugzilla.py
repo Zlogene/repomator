@@ -1,7 +1,6 @@
 """The module handles all bugzilla needs"""
 
 import json
-#from pprint import pprint
 import os
 import yaml
 import requests
@@ -35,7 +34,7 @@ def yml_parser():
     return resp
 
 
-def bugtracker(arch, bug, email):
+def bugtracker(arch, bug):
 
     """The function handles all the web requests using requests library"""
 
@@ -45,17 +44,11 @@ def bugtracker(arch, bug, email):
     config = yml_parser()
 
     comment_url = '{}/rest/bug/{}/comment'.format(config["url"], bug)
- #   cc_url = '{}/rest/bug/{}'.format(config["url"], bug)
 
     comment_data = json.dumps({"comment": "{} {}".format(arch, config["comment"])})
-#  cc_change = json.dumps({"cc": {"remove": [{}].format(email)}})
 
     auth = requests.get('{}/rest/login?login={}&password={}'.format(config["url"], config["login"], config["password"]))
 
     token = json.loads(auth.text)["token"]
 
     requests.post(comment_url + "?token={}".format(token), data=comment_data)
-
-#    abra = requests.put(cc_url + "?token={}".format(token), data=cc_change)
-
-#    pprint(abra.text)
