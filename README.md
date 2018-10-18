@@ -1,9 +1,9 @@
 # repomator
 
 This script is designed to handle gentoo keywording and stabilization lists work.
-It uses bugzilla REST api rather than `xmlrpc` which is marked as 
+It uses bugzilla REST api rather than `xmlrpc` which is marked 
 [obsolete](https://bugzilla.readthedocs.io/en/latest/integrating/apis.html#api-list) by bugzilla developers.
-The work is still in progress so script will recive major updates later, to expand its possibilities.
+The work is still in progress so the script will recive major updates later, to expand its possibilities.
 
 # requirements
 
