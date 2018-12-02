@@ -27,6 +27,7 @@ check_existence("/usr/bin/ekeyword")
 parser = argparse.ArgumentParser(description='Repomator script v1.0')
 parser.add_argument('-a', '--arch', help='specify architecture')
 parser.add_argument('-b', '--bug', type=int, help='specify bug number')
+parser.add_argument('-e', '--email', help='specify email addrress')
 parser.add_argument('-l', '--list', help='specify packages list')
 parser.add_argument('-r', '--repo', help='specify repo path')
 
