@@ -50,6 +50,6 @@ with open(data, 'r') as f:
         os.chdir(os.path.join(repo, package_category, package_name))
 
         os.system("/usr/bin/ekeyword {} {}-{}.ebuild".format(arch, package_name, package_version))
-        os.system("/usr/bin/repoman ci -m \"{}/{}: {} stable wrt bug {}\"".format(package_category, package_name, arch, bug))
+        os.system("/usr/bin/repoman ci -m \"{}/{}: {} stable wrt bug #{}\"".format(package_category, package_name, arch, bug))
 
 bugtracker(arch, bug)
