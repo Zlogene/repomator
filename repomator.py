@@ -5,9 +5,7 @@
 TODO:  rewrite it using appropriate bugzilla rest-api class"""
 
 import argparse
-import os
-import re
-import sys
+import os, re, sys
 from bugzilla import bugtracker
 
 
