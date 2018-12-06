@@ -5,7 +5,8 @@
 TODO:  rewrite it using appropriate bugzilla rest-api class"""
 
 import argparse
-import os, re, sys
+import os
+import sys
 from bugzilla import bugtracker
 
 
@@ -31,27 +32,20 @@ parser.add_argument('-r', '--repo', help='specify repo path', required=True)
 
 args = parser.parse_args()
 
-arch = args.arch
-bug = args.bug
-email = args.email
-data = args.list
-repo = args.repo
-
-
-with open(data, 'r') as f:
+with open(args.data, 'r') as f:
     for line in f:
 
         package_category = re.search(r'((?<==)\w+.\w+|\w+.\w+)', line).group(0)
         package_name = re.search(r'(?<=/).*(?=-\d)|(\w+_\w+)', line).group(0)
         package_version = re.search(r'(?<=-)\d.*?(?=\s)', line).group(0)
 
-        os.chdir(os.path.join(repo, package_category, package_name))
+        os.chdir(os.path.join(args.repo, package_category, package_name))
 
-        os.system("/usr/bin/ekeyword {} {}-{}.ebuild".format(arch, package_name, package_version))
+        os.system("/usr/bin/ekeyword {} {}-{}.ebuild".format(args.arch, package_name, package_version))
         
-        if arch[:1] is not "~":
-            os.system("/usr/bin/repoman ci -m \"{}/{}: {} stable wrt bug #{}\"".format(package_category, package_name, arch, bug))
+        if args.arch[:1] is not "~":
+            os.system("/usr/bin/repoman ci -m \"{}/{}: {} stable wrt bug #{}\"".format(package_category, package_name, args.arch, args.bug))
         else:
-            os.system("/usr/bin/repoman ci -m \"{}/{}: Add {} keyword wrt bug #{}\"".format(package_category, package_name, arch, bug))
+            os.system("/usr/bin/repoman ci -m \"{}/{}: Add {} keyword wrt bug #{}\"".format(package_category, package_name, args.arch, args.bug))
 
-bugtracker(arch, bug)
+bugtracker(args.arch, args.bug)
