@@ -6,6 +6,7 @@ TODO:  rewrite it using appropriate bugzilla rest-api class"""
 
 import argparse
 import os
+import re
 import sys
 from bugzilla import bugtracker
 
@@ -44,8 +45,10 @@ with open(args.data, 'r') as f:
         os.system("/usr/bin/ekeyword {} {}-{}.ebuild".format(args.arch, package_name, package_version))
         
         if args.arch[:1] is not "~":
-            os.system("/usr/bin/repoman ci -m \"{}/{}: {} stable wrt bug #{}\"".format(package_category, package_name, args.arch, args.bug))
+            os.system("/usr/bin/repoman ci -m \"{}/{}: {} stable wrt bug #{}\""
+                      .format(package_category, package_name, args.arch, args.bug))
         else:
-            os.system("/usr/bin/repoman ci -m \"{}/{}: Add {} keyword wrt bug #{}\"".format(package_category, package_name, args.arch, args.bug))
+            os.system("/usr/bin/repoman ci -m \"{}/{}: Add {} keyword wrt bug #{}\""
+                      .format(package_category, package_name, args.arch, args.bug))
 
 bugtracker(args.arch, args.bug)
