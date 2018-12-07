@@ -33,7 +33,7 @@ parser.add_argument('-r', '--repo', help='specify repo path', required=True)
 
 args = parser.parse_args()
 
-with open(args.data, 'r') as f:
+with open(args.list, 'r') as f:
     for line in f:
 
         package_category = re.search(r'((?<==)\w+.\w+|\w+.\w+)', line).group(0)
