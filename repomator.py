@@ -39,7 +39,7 @@ with open(args.list, 'r') as f:
 
     for line in f:
 
-        package_category = re.search(r'((?<==)\w+.\w+|\w+.\w+)', line).group(0)
+        package_category = re.search(r'((?<==)\w+-\w+|\w+-\w+|\w+)', line).group(0)
         package_name = re.search(r'(?<=/).*(?=-\d)|(\w+_\w+)', line).group(0)
         package_version = re.search(r'(?<=-)\d.*?(?=\s)', line).group(0)
 
