@@ -33,7 +33,6 @@ arches_list = ['alpha', 'amd64', 'arm', 'arm64', 'hppa', 'ia64', 'm68k', 'ppc', 
 parser = argparse.ArgumentParser(description='Repomator script v1.0')
 parser.add_argument('-a', '--arch', help='specify architecture', choices=arches_list, required=True)
 parser.add_argument('-b', '--bug', type=int, help='specify bug number', required=True)
-parser.add_argument('-e', '--email', help='specify email address')
 parser.add_argument('-l', '--list', help='specify packages list', required=True)
 parser.add_argument('-r', '--repo', help='specify repo path', required=True)
 
