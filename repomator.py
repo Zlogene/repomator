@@ -9,6 +9,7 @@ import os
 import re
 import sys
 from bugzilla import bugtracker
+from bugzilla import list_handler
 
 
 def check_existence(path):
@@ -33,20 +34,25 @@ arches_list = ['alpha', 'amd64', 'arm', 'arm64', 'hppa', 'ia64', 'm68k', 'ppc', 
 parser = argparse.ArgumentParser(description='Repomator script v1.0')
 parser.add_argument('-a', '--arch', help='specify architecture', choices=arches_list, required=True)
 parser.add_argument('-b', '--bug', type=int, help='specify bug number', required=True)
-parser.add_argument('-l', '--list', help='specify packages list', required=True)
 parser.add_argument('-r', '--repo', help='specify repo path', required=True)
 
 args = parser.parse_args()
 
 packages = []
 
-with open(args.list, 'r') as f:
+with open(list_handler(args.bug), "r") as f:
 
     for line in f:
 
-        package_category = re.search(r'((?<==)\w+-\w+|\w+-\w+|\w+)', line).group(0)
-        package_name = re.search(r'(?<=/).*(?=-\d)|(\w+_\w+)', line).group(0)
-        package_version = re.search(r'(?<=-)\d.*?(?=\s)', line).group(0)
+        if line.startswith("#") or line.isspace():
+            continue
+
+        package_category = line.rpartition("/")[0]
+        package_name = re.search(r'(?<=/).*(?=-\d)', line).group(0)
+        package_version = re.search(r'(?<=-)\d.*?[^\s]*', line).group(0)
+
+        if args.arch not in line and not line.endswith(package_version):
+            continue
 
         packages.append({
             "category": package_category,
@@ -68,5 +74,3 @@ for package in packages:
     else:
             os.system("/usr/bin/repoman ci -m \"{}/{}: Add {} keyword wrt bug #{}\""
                       .format(package["category"], package["name"], args.arch, args.bug))
-
-bugtracker(args.arch, args.bug)

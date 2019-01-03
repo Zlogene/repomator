@@ -1,37 +1,25 @@
 """The module handles all bugzilla needs"""
 
+from bs4 import BeautifulSoup
 import json
-import os
-import yaml
 import requests
+from config_parser import yml_parser
 
 
-def yml_existence():
+def list_handler(bug):
 
-    """The function checks all the dirs where config may exist"""
+    """The function downloads a package list straight from bugzilla"""
 
-    if os.path.isfile(os.path.expanduser("~/.repomator.yaml")):
-        return os.path.abspath(os.path.expanduser("~/.repomator.yaml"))
-    elif os.path.isfile("/etc/repomator.yaml"):
-        return os.path.abspath("/etc/repomator.yaml")
-    else:
-        print("File Not Found")
+    config = yml_parser()
 
+    resp = requests.get("{}/{}".format(config["url"], bug)).text
+    soup = BeautifulSoup(resp, "html.parser")
+    mydivs = soup.find("div", class_="uneditable_textarea").text
 
-def yml_parser():
+    with open("/tmp/{}-srablereq".format(bug), "w") as f:
+        f.write(mydivs)
 
-    """The function parses yaml configuration file and returns its values for further usage"""
-
-    with open(yml_existence(), 'r') as yamlconfig:
-        doc = yaml.load(yamlconfig)
-
-    resp = dict()
-    resp["url"] = doc["bugtracker"]["url"]
-    resp["login"] = doc["bugtracker"]["login"]
-    resp["password"] = doc["bugtracker"]["password"]
-    resp["comment"] = doc["general"]["comment"]
-
-    return resp
+    return f.name
 
 
 def bugtracker(arch, bug):
@@ -43,11 +31,11 @@ def bugtracker(arch, bug):
 
     config = yml_parser()
 
-    comment_url = '{}/rest/bug/{}/comment'.format(config["url"], bug)
+    comment_url = "{}/rest/bug/{}/comment".format(config["url"], bug)
 
     comment_data = json.dumps({"comment": "{} {}".format(arch, config["comment"])})
 
-    auth = requests.get('{}/rest/login?login={}&password={}'.format(config["url"], config["login"], config["password"]))
+    auth = requests.get("{}/rest/login?login={}&password={}".format(config["url"], config["login"], config["password"]))
 
     token = json.loads(auth.text)["token"]
 
