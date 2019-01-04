@@ -31,7 +31,7 @@ arches_list = ['alpha', 'amd64', 'arm', 'arm64', 'hppa', 'ia64', 'm68k', 'ppc', 
                '~alpha', '~amd64', '~arm', '~arm64', '~hppa', '~ia64', '~m68k', '~mips', '~mips', '~ppc', '~ppc64',
                '~s390', '~sh', '~sparc', '~x86']
 
-parser = argparse.ArgumentParser(description='Repomator script v1.0')
+parser = argparse.ArgumentParser(description='Repomator script v2.0')
 parser.add_argument('-a', '--arch', help='specify architecture', choices=arches_list, required=True)
 parser.add_argument('-b', '--bug', type=int, help='specify bug number', required=True)
 parser.add_argument('-r', '--repo', help='specify repo path', required=True)
@@ -43,6 +43,8 @@ packages = []
 with open(list_handler(args.bug), "r") as f:
 
     for line in f:
+
+        line = line.strip("\n")
 
         if line.startswith("#") or line.isspace():
             continue

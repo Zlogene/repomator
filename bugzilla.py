@@ -16,7 +16,7 @@ def list_handler(bug):
     soup = BeautifulSoup(resp, "html.parser")
     mydivs = soup.find("div", class_="uneditable_textarea").text
 
-    with open("/tmp/{}-srablereq".format(bug), "w") as f:
+    with open("/tmp/{}-srablereq".format(bug), "r+") as f:
         f.write(mydivs)
 
     return f.name
