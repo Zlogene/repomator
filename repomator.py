@@ -44,8 +44,6 @@ with open(list_handler(args.bug), "r") as f:
 
     for line in f:
 
-        line = line.strip("\n")
-
         if line.startswith("#") or line.isspace():
             continue
 
