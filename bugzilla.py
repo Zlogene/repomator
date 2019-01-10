@@ -16,9 +16,6 @@ def list_handler(bug):
     soup = BeautifulSoup(resp, "html.parser")
     mydivs = soup.find("div", class_="uneditable_textarea").text
 
-    mydivs = mydivs.strip("\n")
-    mydivs = mydivs.strip("=")
-
     with open("/tmp/{}-srablereq".format(bug), "w") as f:
         f.write(mydivs)
 

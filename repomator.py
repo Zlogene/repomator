@@ -47,6 +47,9 @@ with open(list_handler(args.bug), "r") as f:
         if line.startswith("#") or line.isspace():
             continue
 
+        line = line.strip("=")
+        line = line.strip("\n")
+
         package_category = line.rpartition("/")[0]
         package_name = re.search(r'(?<=/).*(?=-\d)', line).group(0)
         package_version = re.search(r'(?<=-)\d.*?[^\s]*', line).group(0)
