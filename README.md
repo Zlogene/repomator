@@ -7,7 +7,7 @@ The work is still in progress so the script will recive major updates later, to 
 
 # requirements
 
-The script requires [pyyaml](http://pyyaml.org/wiki/PyYAML) and [requests](http://docs.python-requests.org/en/master/) 
+The script requires [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/), [pyyaml](http://pyyaml.org/wiki/PyYAML) and [requests](http://docs.python-requests.org/en/master/) 
 modules  to be installed.
 
 # usage
