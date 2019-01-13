@@ -10,7 +10,7 @@ setup(
     scripts=["bin/repomator"],
     author='Mikle Kolyada',
     author_email='zlogene@gentoo.org',
-    description='Gentoo Gnu/Linux branches tooling',
+    description='Gentoo GNU/Linux branches tooling',
 
     data_files=[('/etc/repomator', ['data/repomator.yaml'])],
 
