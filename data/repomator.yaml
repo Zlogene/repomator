@@ -1,7 +1,4 @@
 bugtracker:
     url: https://bugs.gentoo.org
-    login:
-    password:
-
-general:
-    comment: # put your comment pattern here
+    login: #bugzilla login
+    password: #bugzilla password

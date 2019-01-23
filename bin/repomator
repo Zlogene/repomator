@@ -9,6 +9,7 @@ import os
 import re
 import sys
 from repomator.bugzilla import list_handler
+from repomator.bugzilla import bugtracker
 
 
 def check_existence(path):
@@ -84,3 +85,5 @@ for package in packages:
     else:
             os.system("/usr/bin/repoman ci -m \"{}/{}: Add {} keyword wrt bug #{}\""
                       .format(package["category"], package["name"], args.arch, args.bug))
+
+bugtracker(args.arch, args.bug)

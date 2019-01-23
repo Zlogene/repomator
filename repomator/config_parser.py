@@ -26,6 +26,5 @@ def yml_parser():
     resp["url"] = doc["bugtracker"]["url"]
     resp["login"] = doc["bugtracker"]["login"]
     resp["password"] = doc["bugtracker"]["password"]
-    resp["comment"] = doc["general"]["comment"]
 
     return resp
