@@ -3,6 +3,7 @@
 from bs4 import BeautifulSoup
 import json
 import requests
+import sys
 from repomator.config_parser import yml_parser
 
 
@@ -15,6 +16,10 @@ def list_handler(bug):
     resp = requests.get("{}/{}".format(config["url"], bug)).text
     soup = BeautifulSoup(resp, "html.parser")
     mydivs = soup.find("div", class_="uneditable_textarea").text
+
+    if not mydivs:
+        print("Given bug has no atoms to keyword or stabilize!")
+        sys.exit(1)
 
     with open("/tmp/{}-srablereq".format(bug), "w") as f:
         f.write(mydivs)
@@ -32,7 +37,11 @@ def bugtracker(arch, bug):
 
     auth = requests.get("{}/rest/login?login={}&password={}".format(config["url"], config["login"], config["password"]))
 
-    token = json.loads(auth.text)["token"]
+    try:
+        token = json.loads(auth.text)["token"]
+    except KeyError:
+        print("Invalid bugzilla credentials provided!")
+        sys.exit(1)
 
     if arch.startswith("~"):
         requests.post(comment_url + "?token={}".format(token), data={"comment": "{} keyworded".format(arch)})

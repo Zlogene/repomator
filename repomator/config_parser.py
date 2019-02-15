@@ -12,7 +12,8 @@ def yml_existence():
     elif os.path.isfile("/etc/repomator/repomator.yaml"):
         return os.path.abspath("/etc/repomator/repomator.yaml")
     else:
-        sys.exit("No configuration file found!")
+        print("No configuration file found!")
+        sys.exit(1)
 
 
 def yml_parser():
