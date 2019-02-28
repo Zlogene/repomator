@@ -1,7 +1,7 @@
 """The module handles all bugzilla needs"""
 
 from bs4 import BeautifulSoup
-import json
+import bugzilla
 import requests
 import sys
 from repomator.config_parser import yml_parser
@@ -21,7 +21,7 @@ def list_handler(bug):
         print("Given bug has no atoms to keyword or stabilize!")
         sys.exit(1)
 
-    with open("/tmp/{}-srablereq".format(bug), "w") as f:
+    with open("/tmp/{}-stablereq".format(bug), "w") as f:
         f.write(mydivs)
 
     return f.name
@@ -33,17 +33,22 @@ def bugtracker(arch, bug):
 
     config = yml_parser()
 
-    comment_url = "{}/rest/bug/{}/comment".format(config["url"], bug)
+    bz = bugzilla.Bugzilla(config["url"])
+    bz.login(config["login"], config["password"])
 
-    auth = requests.get("{}/rest/login?login={}&password={}".format(config["url"], config["login"], config["password"]))
+    if arch[0] is "~":
+        arch = arch[1:]
 
-    try:
-        token = json.loads(auth.text)["token"]
-    except KeyError:
-        print("Invalid bugzilla credentials provided!")
-        sys.exit(1)
+        update = bz.build_update(
+            cc_remove="{}@gentoo.org".format(arch),
+            comment="~{} keyworded".format(arch))
 
-    if arch.startswith("~"):
-        requests.post(comment_url + "?token={}".format(token), data={"comment": "{} keyworded".format(arch)})
+        bz.update_bugs(bug, update)
+
     else:
-        requests.post(comment_url + "?token={}".format(token), data={"comment": "{} stable".format(arch)})
+
+        update = bz.build_update(
+            cc_remove="{}@gentoo.org".format(arch),
+            comment="{} stable".format(arch))
+
+        bz.update_bugs(bug, update)
