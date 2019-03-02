@@ -1,5 +1,6 @@
 import os
 import sys
+from termcolor import colored
 import yaml
 
 
@@ -12,7 +13,7 @@ def yml_existence():
     elif os.path.isfile("/etc/repomator/repomator.yaml"):
         return os.path.abspath("/etc/repomator/repomator.yaml")
     else:
-        print("No configuration file found!")
+        print(colored("No configuration file found!", "red"))
         sys.exit(1)
 
 

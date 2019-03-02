@@ -16,8 +16,9 @@ setup(
 
     install_requires=[
         'beautifulsoup4 >= 4.5.1',
-        'requests >= 2.18.4',
         'pyyaml >= 3.13',
-        'python-bugzilla >= 1.2.2'
+        'python-bugzilla >= 1.2.2',
+        'requests >= 2.18.4',
+        'termcolor >= 1.1.0'
     ]
 )

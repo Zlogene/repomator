@@ -5,6 +5,7 @@ import bugzilla
 import requests
 import sys
 from repomator.config_parser import yml_parser
+from termcolor import colored
 
 
 def list_handler(bug):
@@ -18,7 +19,7 @@ def list_handler(bug):
     mydivs = soup.find("div", class_="uneditable_textarea").text
 
     if not mydivs:
-        print("Given bug has no atoms to keyword or stabilize!")
+        print(colored("Given bug has no atoms to keyword or stabilize!", "text"))
         sys.exit(1)
 
     with open("/tmp/{}-stablereq".format(bug), "w") as f:
@@ -52,3 +53,5 @@ def bugtracker(arch, bug):
             comment="{} stable".format(arch))
 
         bz.update_bugs(bug, update)
+
+    print(colored("Posted comment to {}/{}".format(config["url"], bug), "green"))
