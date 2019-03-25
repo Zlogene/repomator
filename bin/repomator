@@ -10,16 +10,9 @@ import re
 import sys
 from repomator.bugzilla import list_handler
 from repomator.bugzilla import bugtracker
+from repomator.handlers import check_existence
+from repomator.handlers import uniq
 from termcolor import colored
-
-
-def check_existence(path):
-
-    """The function performs basic binary-existence checks"""
-
-    if not os.path.isfile(path):
-        print(colored("Can't find: {}. Please install appropriate packages!", "red".format(path)))
-        sys.exit(1)
 
 
 check_existence("/usr/bin/git")
@@ -70,6 +63,10 @@ with open(list_handler(args.bug), "r") as f:
             "version": package_version
         })
 
+    if not packages:
+        print(colored("Can't get atoms, check options passed or bug!", "red"))
+        sys.exit(1)
+
 for package in packages:
 
     try:
@@ -80,6 +77,8 @@ for package in packages:
     except FileNotFoundError:
         print(colored("Specify repo path with '--repo' option or change dir!", "red"))
         sys.exit(1)
+
+packages = uniq(packages)
 
 for package in packages:
 

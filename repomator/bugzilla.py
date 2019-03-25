@@ -18,10 +18,6 @@ def list_handler(bug):
     soup = BeautifulSoup(resp, "html.parser")
     mydivs = soup.find("div", class_="uneditable_textarea").text
 
-    if not mydivs:
-        print(colored("Given bug has no atoms to keyword or stabilize!", "text"))
-        sys.exit(1)
-
     with open("/tmp/{}-stablereq".format(bug), "w") as f:
         f.write(mydivs)
 
