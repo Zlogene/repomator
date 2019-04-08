@@ -11,7 +11,9 @@ import sys
 from repomator.bugzilla import list_handler
 from repomator.bugzilla import bugtracker
 from repomator.handlers import check_existence
+from repomator.handlers import keywords_checker
 from repomator.handlers import uniq
+from subprocess import run
 from termcolor import colored
 
 
@@ -26,14 +28,11 @@ arches_list = ['alpha', 'amd64', 'arm', 'arm64', 'hppa', 'ia64', 'm68k', 'ppc', 
                '~s390', '~sh', '~sparc', '~x86']
 
 parser = argparse.ArgumentParser(description='Repomator script v2.0')
-parser.add_argument('-a', '--arch', help='specify architecture', choices=arches_list, nargs="+", required=True)
+parser.add_argument('-a', '--arch', help='specify architecture', choices=arches_list, required=True)
 parser.add_argument('-b', '--bug', type=int, help='specify bug number', required=True)
 parser.add_argument('-r', '--repo', help='specify repo path')
 
 args = parser.parse_args()
-
-args.arch.sort()
-args.arch = " ".join(args.arch)  # ekeyword requires a string, not a list
 
 if args.repo is None:
     args.repo = os.getcwd()
@@ -54,7 +53,8 @@ with open(list_handler(args.bug), "r") as f:
         package_name = re.search(r'(?<=/).*(?=-\d)', line).group(0)
         package_version = re.search(r'(?<=-)\d.*?[^\s]*', line).group(0)
 
-        if args.arch not in line and not line.endswith(package_version):
+        if args.arch not in line and not line.endswith(package_version) or \
+                keywords_checker(args.arch, args.repo, package_category, package_name, package_version):
             continue
 
         packages.append({
@@ -70,12 +70,19 @@ with open(list_handler(args.bug), "r") as f:
 for package in packages:
 
     try:
-
         os.chdir(os.path.join(args.repo, package["category"], package["name"]))
-        os.system("/usr/bin/ekeyword {} {}-{}.ebuild".format(args.arch, package["name"], package["version"]))
 
     except FileNotFoundError:
         print(colored("Specify repo path with '--repo' option or change dir!", "red"))
+        sys.exit(1)
+
+    try:
+        run("/usr/bin/ekeyword --format=inline {} {}-{}.ebuild"
+            .format(args.arch, package["name"], package["version"]), shell=True)
+
+    except FileNotFoundError:
+        print(colored("No {} with version {} found, check packages list!"
+                      .format(package["name"], package["version"]), "yellow"))
         sys.exit(1)
 
 packages = uniq(packages)
@@ -84,10 +91,16 @@ for package in packages:
 
     os.chdir(os.path.join(args.repo, package["category"], package["name"]))
     if args.arch[:1] is not "~":
-            os.system("/usr/bin/repoman --include-arches=\"{}\" ci -m \"{}/{}: {} stable wrt bug #{}\""
-                      .format(args.arch, package["category"], package["name"], args.arch, args.bug))
+        res = run("/usr/bin/repoman --include-arches=\"{}\" ci -m \"{}/{}: {} stable wrt bug #{}\""
+                  .format(args.arch, package["category"], package["name"], args.arch, args.bug),
+                  shell=True)
     else:
-            os.system("/usr/bin/repoman --include-arches=\"{}\" ci -m \"{}/{}: Add {} keyword wrt bug #{}\""
-                      .format(args.arch, package["category"], package["name"], args.arch, args.bug))
+        res = run("/usr/bin/repoman --include-arches=\"{}\" ci -m \"{}/{}: Add {} keyword wrt bug #{}\""
+                  .format(args.arch, package["category"], package["name"], args.arch, args.bug),
+                  shell=True)
+
+    if res.returncode != 0:
+        print("Could not continue, resolve errors above!")
+        sys.exit(1)
 
 bugtracker(args.arch, args.bug)

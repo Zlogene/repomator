@@ -3,7 +3,6 @@
 from bs4 import BeautifulSoup
 import bugzilla
 import requests
-import sys
 from repomator.config_parser import yml_parser
 from termcolor import colored
 
