@@ -15,16 +15,22 @@ def check_existence(path):
 
 def keywords_checker(arch, repo, category, name, version):
 
-    with open(os.path.join(repo, category, name, name + "-" + version + ".ebuild")) as f:
-        for line in f:
-            if line.startswith("KEYWORDS"):
-                line = line.split('"')[1]
-                line = line.split(" ")
+    try:
 
-                if arch in line:
-                    return True
+        with open(os.path.join(repo, category, name, name + "-" + version + ".ebuild")) as f:
+            for line in f:
+                if "KEYWORDS" in line:
+                    line = line.split('"')[1]
+                    line = line.split(" ")
 
-                return False
+                    if arch in line:
+                        return True
+
+                    return False
+
+    except FileNotFoundError:
+        print(colored("Specify repo path with '--repo' option or change dir!", "red"))
+        sys.exit(1)
 
 
 def uniq(data):

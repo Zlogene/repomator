@@ -55,6 +55,7 @@ with open(list_handler(args.bug), "r") as f:
 
         if args.arch not in line and not line.endswith(package_version) or \
                 keywords_checker(args.arch, args.repo, package_category, package_name, package_version):
+
             continue
 
         packages.append({
