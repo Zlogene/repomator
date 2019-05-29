@@ -22,7 +22,7 @@ def yml_parser():
     """The function parses yaml configuration file and returns its values for further usage"""
 
     with open(yml_existence(), 'r') as yamlconfig:
-        doc = yaml.load(yamlconfig)
+        doc = yaml.safe_load(yamlconfig)
 
     resp = dict()
     resp["url"] = doc["bugtracker"]["url"]
