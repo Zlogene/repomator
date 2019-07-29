@@ -23,8 +23,9 @@ def keywords_checker(arch, repo, category, name, version):
                     line = line.split('"')[1]
                     line = line.split(" ")
 
-                    if arch in line:
-                        return True
+                    for i in line:
+                        if i == arch:
+                            return True
 
                     return False
 
