@@ -100,7 +100,7 @@ for package in packages:
                   shell=True)
     else:
         res = run("/usr/bin/repoman --include-arches=\"{}\" ci -m \"{}/{}: Add {} keyword wrt bug #{}\""
-                  .format(args.arch, package["category"], package["name"], args.arch, args.bug),
+                  .format(args.arch[1:], package["category"], package["name"], args.arch, args.bug),
                   shell=True)
 
     if res.returncode != 0:
